@@ -1,0 +1,53 @@
+---
+title: "Perth Fuel Prices"
+author: "Shih Ching Fu"
+date: "09/11/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(lubridate)
+library(forecast)
+library(astsa)
+
+```
+
+
+```{r}
+fuelprices <- read_csv("data/FuelPrices_ULP_Metro.csv", 
+                       col_types = cols(Date = col_date(format = "%d/%m/%Y"), 
+                                        Product = col_factor(levels = c("ULP")), 
+                                        Region = col_factor(levels = c("Metro"))))
+```
+
+
+```{r}
+glimpse(fuelprices)
+summary(fuelprices)
+
+```
+
+
+```{r}
+prices_ts <- fuelprices %>% select(Average) %>% ts(frequency = 12, start = c(2001,1))
+autoplot(prices_ts)
+```
+
+```{r}
+ggseasonplot(prices_ts)
+```
+
+```{r}
+ggmonthplot(prices_ts)
+```
+
+
+```{r}
+
+acf2(prices_ts)
+```
+
